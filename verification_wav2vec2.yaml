@@ -1,0 +1,72 @@
+# ################################
+# Model: Speaker Verification Baseline (Fine-tuned Wav2Vec2)
+# Authors: Hwidong Na 2020
+#          Mirco Ravanelli 2020
+# Modifed for Wav2Vec2 XLSR-53 Fine-Tuning
+# ################################
+
+seed: 1234
+__set_seed: !apply:speechbrain.utils.seed_everything [!ref <seed>]
+
+# Folders and train_log file
+data_folder: /home/amoroso/scratch/CORPORA_DIR/VoxCeleb1_unified
+# !PLACEHOLDER #e.g., /localscratch/voxceleb1
+output_folder: results/voxceleb1_2/speaker_verification_wav2vec2/<seed>
+save_folder: !ref <output_folder>/save/
+
+# Use the following links for the official voxceleb splits:
+# VoxCeleb1 (cleaned): https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test2.txt
+# VoxCeleb1-H (cleaned): https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/list_test_hard2.txt
+# VoxCeleb1-E (cleaned): https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/list_test_all2.txt.
+# VoxCeleb1-E and VoxCeleb1-H lists are drawn from the VoxCeleb1 training set.
+# Therefore you cannot use any files in VoxCeleb1 for training if you are using these lists for testing.
+verification_file: https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test2.txt
+
+# Path pointing to your local directory containing your trained Wav2Vec2 checkpoints
+pretrain_path: results/wav2vec2_xlsr_vox1/1234/save
+
+# csv files
+train_data: !ref <save_folder>/train.csv
+enrol_data: !ref <save_folder>/enrol.csv
+test_data: !ref <save_folder>/test.csv
+split_ratio: [90, 10]
+skip_prep: False
+
+batch_size: 8
+score_norm: s-norm  # z-norm t-norm s-norm (uncomment to enable it)
+cohort_size: 20000 # amount of imposter utterances in normalization cohort
+n_train_snts: 400000 # used for normalization stats
+
+# Dataloader options
+train_dataloader_opts:
+    batch_size: !ref <batch_size>
+
+enrol_dataloader_opts:
+    batch_size: !ref <batch_size>
+
+test_dataloader_opts:
+    batch_size: !ref <batch_size>
+
+# Model Definitions
+wav2vec2_hub: "facebook/wav2vec2-large-xlsr-53"
+
+wav2vec2: !new:speechbrain.lobes.models.huggingface_transformers.wav2vec2.Wav2Vec2
+    source: !ref <wav2vec2_hub>
+    save_path: !ref <save_folder>/wav2vec2_checkpoint
+
+pooling: !new:speechbrain.nnet.pooling.StatisticsPooling
+    return_mean: True
+    return_std: True
+
+# Register modules for verification scripts to reference
+modules:
+    wav2vec2: !ref <wav2vec2>
+    pooling: !ref <pooling>
+
+# Pretrainer to load the locally saved model weights from the training stage
+pretrainer: !new:speechbrain.utils.parameter_transfer.Pretrainer
+    collect_in: !ref <save_folder>
+    loadables:
+        wav2vec2: !ref <wav2vec2>
+    paths:
+        wav2vec2: !ref <pretrain_path>/wav2vec2.ckpt
