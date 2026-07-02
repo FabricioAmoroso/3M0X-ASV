@@ -17,7 +17,7 @@ NOISE_DATASET_URL: https://www.dropbox.com/scl/fi/a09pj97s5ifan81dqhi4n/noises.z
 RIR_DATASET_URL: https://www.dropbox.com/scl/fi/linhy77c36mu10965a836/RIRs.zip?rlkey=pg9cu8vrpn2u173vhiqyu743u&dl=1
 
 # Data files
-data_folder: /home/amoroso/scratch/CORPORA_DIR/VoxCeleb1_unified # CHANGE HERE YOUR DATASET PATH
+data_folder:   /home/diaelhak/links/scratch/voxceleb/vox1_devall # CHANGE HERE YOUR DATASET PATH # change
 data_folder_noise: !ref <data_folder>/noise 
 data_folder_rir: !ref <data_folder>/rir 
 train_annotation: !ref <save_folder>/train.csv
@@ -26,7 +26,7 @@ noise_annotation: !ref <save_folder>/noise.csv
 rir_annotation: !ref <save_folder>/rir.csv
 
 # Verification split mapping
-verification_file: https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test2.txt
+verification_file: /home/diaelhak/links/projects/def-aravila/diaelhak/codes/jobscode/veri_test2.txt
 
 split_ratio: [90, 10]
 skip_prep: False
