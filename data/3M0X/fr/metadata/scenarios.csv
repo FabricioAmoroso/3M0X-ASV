@@ -1,0 +1,67 @@
+scenario_id,emotion,purity,topic,num,content
+AL0_1,Anger,Low,0,1,Your pet chewing through cables
+AL1_2,Anger,Low,1,2,Your coworker causing you problems by not doing their work properly
+AL1_3,Anger,Low,1,3,Your coworker taking credit for your work
+AL6_4,Anger,Low,6,4,Losing a competitive team game because your teammates aren't playing well
+AL17_5,Anger,Low,17,5,Being stuck in traffic
+AL17_6,Anger,Low,17,6,Someone cutting a queue or line you're waiting in
+AL42_7,Anger,Low,42,7,Constantly being interrupted or talked over
+AH20_8,Anger,High,20,8,Your car breaking down unexpectedly
+AH20_9,Anger,High,20,9,Someone hitting your car while driving
+AH23_10,Anger,High,23,10,Someone you trust lying to you
+AH23_11,Anger,High,23,11,Your opinions being belittled or dismissed
+AH26_12,Anger,High,26,12,Being accused of something you didn’t do
+AH33_13,Anger,High,33,13,Someone being irrational during an argument
+AH41_14,Anger,High,41,14,A young child being rude to you
+AH44_15,Anger,High,44,15,Your neighbour being loud as you try to sleep
+JL0_1,Joy,Low,0,1,Bringing your new pet back home for the first time
+JL7_2,Joy,Low,7,2,Having a nice meal with your family or friends
+JL9_3,Joy,Low,9,3,Reminiscing memories with a loved one
+JL11_4,Joy,Low,11,4,Getting an excellent grade on an exam or assignment
+JL20_5,Joy,Low,20,5,Buying your first car
+JL39_6,Joy,Low,39,6,Going to a party or gathering with your friends
+JH6_7,Joy,High,6,7,Winning money or a prize from a giveaway
+JH6_8,Joy,High,6,8,Winning a game with your team
+JH15_9,Joy,High,15,9,Your baby being born
+JH16_10,Joy,High,16,10,Being outdoors surrounded by nature
+JH16_11,Joy,High,16,11,Visiting a new country on vacation
+JH29_12,Joy,High,29,12,Getting engaged or married to your partner
+JH32_13,Joy,High,32,13,Meeting your partner after a long time apart
+JH42_14,Joy,High,42,14,Attending a concert or performance by an artist you like
+JH46_15,Joy,High,46,15,Receiving a thoughtful gift from a loved one
+SL1_1,Sadness,Low,1,1,Getting laid off from your job
+SL6_2,Sadness,Low,6,2,Getting cut off from a team or competition you worked hard to join
+SL7_3,Sadness,Low,7,3,Dropping your food when you're hungry and tired
+SL18_4,Sadness,Low,18,4,Having to leave your house due to financial hardships
+SL23_5,Sadness,Low,23,5,Your feelings being invalidated or ignored by someone you trust
+SL23_6,Sadness,Low,23,6,A close friend turning their back on you
+SL25_7,Sadness,Low,25,7,Losing an item your cherish
+SL39_8,Sadness,Low,39,8,Your friends leaving you out and not inviting you to a gathering
+SL45_9,Sadness,Low,45,9,Finding out your partner cheated on you
+SH0_10,Sadness,High,0,10,Your childhood pet passing away
+SH9_11,Sadness,High,9,11,A loved one passing away
+SH19_12,Sadness,High,19,12,Your partner breaking up with you
+SH28_13,Sadness,High,28,13,Witnessing a loved one being ill or suffering
+SH31_14,Sadness,High,31,14,A holiday or event you were looking forward to getting cancelled
+SH35_15,Sadness,High,35,15,Moving away from your loved ones
+RL0_1,Relief,Low,0,1,Your missing pet coming back home
+RL1_2,Relief,Low,1,2,Quitting a stressful job that wasn't worth it
+RL1_3,Relief,Low,1,3,Not being in trouble when you thought you were
+RL7_4,Relief,Low,7,4,Coming back home after a long day out
+RL7_5,Relief,Low,7,5,Waking up from a bad dream and realising it's not real
+RL12_6,Relief,Low,12,6,Getting a job offer you worked really hard for
+RL17_7,Relief,Low,17,7,Arriving at the bus/train station just on time
+RL22_8,Relief,Low,22,8,Receiving money you need but didn't expect
+RL27_9,Relief,Low,27,9,Your last day of school/college/university
+RH2_10,Relief,High,2,10,Medical tests for a serious illness coming back negative
+RH11_11,Relief,High,11,11,Passing an exam you thought you failed
+RH18_12,Relief,High,18,12,Getting approved for a loan for a new house
+RH21_13,Relief,High,21,13,Completing a task at work just before the deadline
+RH25_14,Relief,High,25,14,Finding your lost phone or wallet
+RH49_15,Relief,High,49,15,A loved one recovering well from surgery
+NL1_1,No-Emotion,Low,1,1,What classes/meetings or commitments do you attend to every week?
+NL21_2,No-Emotion,Low,21,2,What was your most recent paper or task at work about?
+NH6_3,No-Emotion,High,6,3,What is your morning routine like?
+NH17_4,No-Emotion,High,17,4,How do yo go to school/work everyday?
+NH24_5,No-Emotion,High,24,5,What items did you last buy from the grocery store?
+NH48_6,No-Emotion,High,48,6,Describe the view you see from your window
