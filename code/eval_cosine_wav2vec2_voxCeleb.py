@@ -51,9 +51,17 @@ from speechbrain.utils.metric_stats import EER, minDCF
 #         embeddings = params["embedding_model"](feats, wav_lens)
 #     return embeddings.squeeze(1)
 def compute_embedding(wavs, wav_lens):
-    feats = verification_brain.modules.wav2vec2(wavs)
-    embeds = verification_brain.modules.pooling(feats, wav_lens)
-    return embeds
+    with torch.no_grad():
+        try:
+            feats = params["wav2vec2"](wavs, wav_lens)
+        except TypeError:
+            feats = params["wav2vec2"](wavs)
+
+        if isinstance(feats, tuple):
+            feats = feats[0]
+
+        embeds = params["pooling"](feats, wav_lens)
+        return embeds
 
 
 def compute_embedding_loop(data_loader):
@@ -231,11 +239,14 @@ if __name__ == "__main__":
     with open(params_file, encoding="utf-8") as fin:
         params = load_hyperpyyaml(fin, overrides)
 
-    # Download verification list (to exclude verification sentences from train)
+    # Local verification list: no internet download
+    os.makedirs(params["save_folder"], exist_ok=True)
     veri_file_path = os.path.join(
         params["save_folder"], os.path.basename(params["verification_file"])
     )
-    download_file(params["verification_file"], veri_file_path)
+    if os.path.abspath(params["verification_file"]) != os.path.abspath(veri_file_path):
+        import shutil
+        shutil.copyfile(params["verification_file"], veri_file_path)
 
     from voxceleb_prepare import prepare_voxceleb  # noqa E402
 
@@ -267,8 +278,11 @@ if __name__ == "__main__":
     # the path given in the YAML file). The tokenizer is loaded at the same time.
     run_on_main(params["pretrainer"].collect_files)
     params["pretrainer"].load_collected()
-    params["embedding_model"].eval()
-    params["embedding_model"].to(run_opts["device"])
+
+    params["wav2vec2"].eval()
+    params["wav2vec2"].to(run_opts["device"])
+    params["pooling"].eval()
+    params["pooling"].to(run_opts["device"])
 
     # Computing  enrollment and test embeddings
     logger.info("Computing enroll/test embeddings...")

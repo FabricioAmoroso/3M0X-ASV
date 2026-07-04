@@ -8,33 +8,33 @@
 seed: 1234
 __set_seed: !apply:speechbrain.utils.seed_everything [!ref <seed>]
 # Updated folder name to avoid overwriting previous ECAPA results
-output_folder: !ref results/wav2vec2_xlsr_vox1/<seed>
+output_folder: !ref results/wav2vec2_xlsr_vox1_devall_local_aug_nounzip/<seed>
 save_folder: !ref <output_folder>/save
 train_log: !ref <output_folder>/train_log.txt
 
 # Data for augmentation
-NOISE_DATASET_URL: https://www.dropbox.com/scl/fi/a09pj97s5ifan81dqhi4n/noises.zip?rlkey=j8b0n9kdjdr32o1f06t0cw5b7&dl=1
-RIR_DATASET_URL: https://www.dropbox.com/scl/fi/linhy77c36mu10965a836/RIRs.zip?rlkey=pg9cu8vrpn2u173vhiqyu743u&dl=1
+NOISE_DATASET_URL: /home/diaelhak/links/scratch/voxceleb/local_augmentation/pointsource_noises
+RIR_DATASET_URL: /home/diaelhak/links/scratch/voxceleb/local_augmentation/RIRs
 
 # Data files
-data_folder: /home/amoroso/scratch/CORPORA_DIR/VoxCeleb1_unified # CHANGE HERE YOUR DATASET PATH
-data_folder_noise: !ref <data_folder>/noise 
-data_folder_rir: !ref <data_folder>/rir 
+data_folder: /home/diaelhak/links/scratch/voxceleb/vox1_devall
+data_folder_noise: /home/diaelhak/links/scratch/voxceleb/local_augmentation/pointsource_noises
+data_folder_rir: /home/diaelhak/links/scratch/voxceleb/local_augmentation/RIRs
 train_annotation: !ref <save_folder>/train.csv
 valid_annotation: !ref <save_folder>/dev.csv
 noise_annotation: !ref <save_folder>/noise.csv
 rir_annotation: !ref <save_folder>/rir.csv
 
 # Verification split mapping
-verification_file: https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test2.txt
+verification_file: /home/diaelhak/links/projects/def-aravila/diaelhak/codes/jobscode/veri_test2.txt
 
 split_ratio: [90, 10]
 skip_prep: False
 ckpt_interval_minutes: 15 # save checkpoint every N min
 
 # Training parameters
-number_of_epochs: 10
-batch_size: 32   # Reduce if run into GPU VRAM limitations
+number_of_epochs: 40
+batch_size: 8
 lr: 0.0001       # lower LR to avoid divergence
 base_lr: 0.00000001
 max_lr: !ref <lr>
@@ -56,11 +56,13 @@ out_n_neurons: 1211 # 1211 unique speakers for VoxCeleb1
 num_workers: 8
 dataloader_options:
     batch_size: !ref <batch_size>
-    shuffle: !ref <shuffle>
-    num_workers: !ref <num_workers>
+    shuffle: True
+    num_workers: 4
+    pin_memory: True
+    drop_last: True
 
 # Model Functions
-wav2vec2_hub: "facebook/wav2vec2-large-xlsr-53"
+wav2vec2_hub: /home/diaelhak/links/projects/def-aravila/diaelhak/codes/audio_ASV/hf_cache/hub/models--facebook--wav2vec2-large-xlsr-53/snapshots/c3f9d884181a224a6ac87bf8885c84d1cff3384f
 
 wav2vec2: !new:speechbrain.lobes.models.huggingface_transformers.wav2vec2.Wav2Vec2
     source: !ref <wav2vec2_hub>
@@ -180,3 +182,15 @@ checkpointer: !new:speechbrain.utils.checkpoints.Checkpointer
         classifier: !ref <classifier>
         counter: !ref <epoch_counter>
         lr_annealing: !ref <lr_annealing>
+train_dataloader_options:
+    batch_size: !ref <batch_size>
+    shuffle: True
+    num_workers: 4
+    pin_memory: True
+    drop_last: True
+
+valid_dataloader_options:
+    batch_size: !ref <batch_size>
+    shuffle: False
+    num_workers: 4
+    pin_memory: True

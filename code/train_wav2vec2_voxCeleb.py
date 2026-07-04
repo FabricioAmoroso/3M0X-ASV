@@ -125,6 +125,10 @@ class SpeakerBrain(sb.core.Brain):
 
         # Perform end-of-iteration things, like annealing, logging, etc.
         if stage == sb.Stage.VALID:
+            # Fix resume bug: CyclicLRScheduler may miss current_lr after checkpoint reload
+            if not hasattr(self.hparams.lr_annealing, "current_lr"):
+                self.hparams.lr_annealing.current_lr = self.optimizer.param_groups[0]["lr"]
+
             old_lr, new_lr = self.hparams.lr_annealing(epoch)
             sb.nnet.schedulers.update_learning_rate(self.optimizer, new_lr)
 
@@ -238,8 +242,36 @@ if __name__ == "__main__":
             "skip_prep": hparams["skip_prep"],
         },
     )
-    sb.utils.distributed.run_on_main(hparams["prepare_noise_data"])
-    sb.utils.distributed.run_on_main(hparams["prepare_rir_data"])
+    # Local augmentation is already extracted.
+    # Do NOT call prepare_noise_data / prepare_rir_data because they unzip again and can exceed quota.
+    import csv
+    import wave
+    from pathlib import Path
+
+    def make_aug_csv(folder, csv_path):
+        folder = Path(folder)
+        wavs = sorted(folder.rglob("*.wav"))
+        if len(wavs) == 0:
+            raise RuntimeError(f"No wav files found in {folder}")
+
+        Path(csv_path).parent.mkdir(parents=True, exist_ok=True)
+
+        with open(csv_path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["ID", "duration", "wav", "wav_format", "wav_opts"])
+
+            for i, wav in enumerate(wavs):
+                try:
+                    with wave.open(str(wav), "rb") as wf:
+                        duration = wf.getnframes() / float(wf.getframerate())
+                except Exception:
+                    duration = 1.0
+                writer.writerow([f"aug_{i}", duration, str(wav), "wav", ""])
+
+        print(f"Created augmentation CSV: {csv_path} with {len(wavs)} files")
+
+    make_aug_csv(hparams["data_folder_noise"], hparams["noise_annotation"])
+    make_aug_csv(hparams["data_folder_rir"], hparams["rir_annotation"])
 
     # Dataset IO prep: creating Dataset objects and proper encodings for phones
     train_data, valid_data, label_encoder = dataio_prep(hparams)

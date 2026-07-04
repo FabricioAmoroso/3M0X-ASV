@@ -9,10 +9,10 @@ seed: 1234
 __set_seed: !apply:speechbrain.utils.seed_everything [!ref <seed>]
 
 # Folders and train_log file
-data_folder: /home/amoroso/scratch/CORPORA_DIR/VoxCeleb1_unified
+data_folder: /home/diaelhak/links/scratch/voxceleb/vox1_testall
 # !PLACEHOLDER #e.g., /localscratch/voxceleb1
-output_folder: results/voxceleb1_2/speaker_verification_wav2vec2/<seed>
-save_folder: !ref <output_folder>/save/
+output_folder: results/wav2vec2_xlsr_vox1_testall_eval_direct_epoch8/1234
+save_folder: !ref <output_folder>/save
 
 # Use the following links for the official voxceleb splits:
 # VoxCeleb1 (cleaned): https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test2.txt
@@ -20,10 +20,10 @@ save_folder: !ref <output_folder>/save/
 # VoxCeleb1-E (cleaned): https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/list_test_all2.txt.
 # VoxCeleb1-E and VoxCeleb1-H lists are drawn from the VoxCeleb1 training set.
 # Therefore you cannot use any files in VoxCeleb1 for training if you are using these lists for testing.
-verification_file: https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test2.txt
+verification_file: /home/diaelhak/links/projects/def-aravila/diaelhak/codes/jobscode/veri_test2.txt
 
 # Path pointing to your local directory containing your trained Wav2Vec2 checkpoints
-pretrain_path: results/wav2vec2_xlsr_vox1/1234/save
+pretrain_path: /home/diaelhak/links/projects/def-aravila/diaelhak/codes/audio_ASV/repos/speechbrain/recipes/VoxCeleb/SpeakerRec/results/wav2vec2_xlsr_vox1_devall_local_aug_nounzip/1234/save/CKPT+2026-06-29+22-03-38+00
 
 # csv files
 train_data: !ref <save_folder>/train.csv
@@ -48,7 +48,7 @@ test_dataloader_opts:
     batch_size: !ref <batch_size>
 
 # Model Definitions
-wav2vec2_hub: "facebook/wav2vec2-large-xlsr-53"
+wav2vec2_hub: /home/diaelhak/links/projects/def-aravila/diaelhak/codes/audio_ASV/hf_cache/hub/models--facebook--wav2vec2-large-xlsr-53/snapshots/c3f9d884181a224a6ac87bf8885c84d1cff3384f
 
 wav2vec2: !new:speechbrain.lobes.models.huggingface_transformers.wav2vec2.Wav2Vec2
     source: !ref <wav2vec2_hub>
