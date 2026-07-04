@@ -25,7 +25,7 @@ from prepare_3M0X import prepare_3M0X
 #
 
 SCRATCH = os.environ["SCRATCH"]
-language = "en"
+language = "pt"
 
 affects = ["Neutral","Angry","Happy","Relieved","Sad","Emotional","All"]
 for affect in affects:

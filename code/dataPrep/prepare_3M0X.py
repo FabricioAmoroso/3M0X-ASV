@@ -169,7 +169,7 @@ def prepare_csv_enrol_test(data_folders, save_folder, verification_pairs_file):
         print(len(enrol_ids), len(test_ids))
         enrol_csv = []
         test_csv = []
-        for e_id, t_id in zip(enrol_ids, test_ids):
+        for e_id in enrol_ids:
 
             e_wav = data_folder + "/wav/" + e_id + ".wav"
             e_signal, e_fs = audio_io.load(e_wav)
@@ -179,6 +179,19 @@ def prepare_csv_enrol_test(data_folders, save_folder, verification_pairs_file):
             e_stop_sample = e_signal.shape[0]
             e_spk_id = "_".join(e_id.split("_")[:3])
 
+            e_csv_line = [e_id, e_audio_duration, e_wav, e_start_sample, e_stop_sample, e_spk_id]
+            enrol_csv.append(e_csv_line)
+
+        e_csv_output = csv_output_head + enrol_csv
+        e_csv_file = os.path.join(save_folder, ENROL_CSV)
+
+        # Writing the csv lines
+        with open(e_csv_file, mode="w", newline="", encoding="utf-8") as csv_f:
+            csv_writer = csv.writer(csv_f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            for line in e_csv_output: csv_writer.writerow(line)
+
+        for t_id in test_ids:
+
             t_wav = data_folder + "/wav/" + t_id + ".wav"
             t_signal, t_fs = audio_io.load(t_wav)
             t_signal = t_signal.squeeze(0)
@@ -187,22 +200,11 @@ def prepare_csv_enrol_test(data_folders, save_folder, verification_pairs_file):
             t_stop_sample = t_signal.shape[0]
             t_spk_id = "_".join(t_id.split("_")[:3])
 
-            e_csv_line = [e_id, e_audio_duration, e_wav, e_start_sample, e_stop_sample, e_spk_id,]
-            t_csv_line = [t_id, t_audio_duration, t_wav, t_start_sample, t_stop_sample, t_spk_id,]
-
-            enrol_csv.append(e_csv_line)
+            t_csv_line = [t_id, t_audio_duration, t_wav, t_start_sample, t_stop_sample, t_spk_id]
             test_csv.append(t_csv_line)
 
-        e_csv_output = csv_output_head + enrol_csv
         t_csv_output = csv_output_head + test_csv
-
-        e_csv_file = os.path.join(save_folder, ENROL_CSV)
         t_csv_file = os.path.join(save_folder, TEST_CSV)
-
-        # Writing the csv lines
-        with open(e_csv_file, mode="w", newline="", encoding="utf-8") as csv_f:
-            csv_writer = csv.writer(csv_f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            for line in e_csv_output: csv_writer.writerow(line)
 
         with open(t_csv_file, mode="w", newline="", encoding="utf-8") as csv_f:
             csv_writer = csv.writer(csv_f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
