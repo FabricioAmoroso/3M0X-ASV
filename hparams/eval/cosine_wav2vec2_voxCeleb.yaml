@@ -1,0 +1,64 @@
+# ################################
+# Model: Speaker Verification Baseline (Fine-tuned Wav2Vec2)
+# Authors: Hwidong Na 2020
+#          Mirco Ravanelli 2020
+# Modifed for Wav2Vec2 XLSR-53 Fine-Tuning
+# ################################
+
+seed: 3
+__set_seed: !apply:speechbrain.utils.seed_everything [!ref <seed>]
+
+# Folders and train_log file
+data_folder: /scratch/yadel/datasets/voxCeleb
+output_folder: !ref /scratch/yadel/jobs/output/wav2vec2_xlsr_53/voxCeleb/<seed>
+save_folder: !ref <output_folder>/save
+verification_file: data/voxCeleb/trials.txt
+
+pretrain_path: !ref <save_folder>/CKPT+2026-07-09+22-25-00+00 # 3
+# pretrain_path: !ref <save_folder>/CKPT+2026-07-09+04-31-11+00 # 24
+
+# csv files
+train_data: !ref output/prepare/voxCeleb/train.csv
+enrol_data: !ref output/prepare/voxCeleb/enrol.csv
+test_data: !ref output/prepare/voxCeleb/test.csv
+split_ratio: [90, 10]
+skip_prep: True
+
+batch_size: 32
+# score_norm: s-norm  # z-norm t-norm s-norm (uncomment to enable it)
+cohort_size: 20000 # amount of imposter utterances in normalization cohort
+n_train_snts: 400000 # used for normalization stats
+
+# Dataloader options
+train_dataloader_opts:
+    batch_size: !ref <batch_size>
+
+enrol_dataloader_opts:
+    batch_size: !ref <batch_size>
+
+test_dataloader_opts:
+    batch_size: !ref <batch_size>
+
+# Model Definitions
+wav2vec2_hub: /scratch/yadel/models/wav2vec2-large-xlsr-53
+
+wav2vec2: !new:speechbrain.integrations.huggingface.Wav2Vec2
+    source: !ref <wav2vec2_hub>
+    save_path: !ref <save_folder>/wav2vec2_xlsr_53_checkpoint
+
+pooling: !new:speechbrain.nnet.pooling.StatisticsPooling
+    return_mean: True
+    return_std: True
+
+# Register modules for verification scripts to reference
+modules:
+    wav2vec2: !ref <wav2vec2>
+    pooling: !ref <pooling>
+
+# Pretrainer to load the locally saved model weights from the training stage
+pretrainer: !new:speechbrain.utils.parameter_transfer.Pretrainer
+    collect_in: !ref <save_folder>
+    loadables:
+        wav2vec2: !ref <wav2vec2>
+    paths:
+        wav2vec2: !ref <pretrain_path>/wav2vec2.ckpt
