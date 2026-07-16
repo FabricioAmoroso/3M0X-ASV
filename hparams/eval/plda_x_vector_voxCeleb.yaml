@@ -12,7 +12,7 @@ output_folder: !ref /scratch/yadel/jobs/output/xvect/voxCeleb/<seed>
 save_folder: !ref <output_folder>/save/
 verification_file: data/voxCeleb/trials.txt
 
-# pretrain_path: speechbrain/spkrec-xvect-voxceleb
+pretrain_path: !ref <save_folder>/CKPT+2026-07-10+21-40-37+00
 
 # csv files
 train_data: !ref output/prepare/voxCeleb/train.csv

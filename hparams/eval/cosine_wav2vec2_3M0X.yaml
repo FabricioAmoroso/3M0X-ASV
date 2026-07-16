@@ -5,22 +5,22 @@
 # Modifed for Wav2Vec2 XLSR-53 Fine-Tuning
 # ################################
 
-language: en
+language: pt
 subset: Neutral-All
-seed: 3
+seed: 24
 __set_seed: !apply:speechbrain.utils.seed_everything [!ref <seed>]
 
 # Folders and train_log file
 data_folder: !ref /scratch/yadel/datasets/3M0X/<language>
-output_folder: !ref /scratch/yadel/jobs/output/wav2vec2_xlsr_53/voxCeleb/<seed>
+output_folder: !ref /scratch/yadel/jobs/output/wav2vec2_xlsr_53/cetuc/<seed>
 save_folder: !ref <output_folder>/save
 verification_file: !ref data/3M0X/<language>/protocol/<subset>.txt
 
-pretrain_path: !ref <save_folder>/CKPT+2026-07-09+22-25-00+00 # 3
-# pretrain_path: !ref <save_folder>/CKPT+2026-07-09+04-31-11+00 # 24
+# pretrain_path: !ref <save_folder>/CKPT+2026-07-11+13-08-01+00 # 3
+pretrain_path: !ref <save_folder>/CKPT+2026-07-11+18-51-06+00 # 24
 
 # csv files
-train_data: !ref output/prepare/voxCeleb/train.csv
+train_data: !ref output/prepare/cetuc/train.csv
 enrol_data: !ref output/prepare/3M0X/<language>/<subset>/enrol.csv
 test_data: !ref output/prepare/3M0X/<language>/<subset>/test.csv
 split_ratio: [90, 10]

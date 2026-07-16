@@ -218,7 +218,7 @@ if __name__ == "__main__":
 
     veri_file_path = params["verification_file"]
 
-    from speechbrain.recipes.VoxCeleb.voxceleb_prepare import prepare_voxceleb
+    # from speechbrain.recipes.VoxCeleb.voxceleb_prepare import prepare_voxceleb
 
     # Create experiment directory
     sb.core.create_experiment_directory(
@@ -230,18 +230,18 @@ if __name__ == "__main__":
     train_dataloader, enrol_dataloader, test_dataloader = dataio_prep(params)
 
     # Prepare data from dev of Voxceleb1
-    prepare_voxceleb(
-        data_folder=params["data_folder"],
-        save_folder=params["save_folder"],
-        verification_pairs_file=veri_file_path,
-        splits=["train", "dev", "test"],
-        split_ratio=params["split_ratio"],
-        seg_dur=3.0,
-        skip_prep=params["skip_prep"],
-        source=(
-            params["voxceleb_source"] if "voxceleb_source" in params else None
-        ),
-    )
+    # prepare_voxceleb(
+    #     data_folder=params["data_folder"],
+    #     save_folder=params["save_folder"],
+    #     verification_pairs_file=veri_file_path,
+    #     splits=["train", "dev", "test"],
+    #     split_ratio=params["split_ratio"],
+    #     seg_dur=3.0,
+    #     skip_prep=params["skip_prep"],
+    #     source=(
+    #         params["voxceleb_source"] if "voxceleb_source" in params else None
+    #     ),
+    # )
 
     run_on_main(params["pretrainer"].collect_files)
     params["pretrainer"].load_collected()
@@ -258,7 +258,7 @@ if __name__ == "__main__":
     os.makedirs(enrolEmbDir, exist_ok=True)
     os.makedirs(testEmbDir, exist_ok=True)
  
-    enrolEmbFileBase = testEmbFileBase = "voxCeleb.pt" # "cetuc.pt"
+    enrolEmbFileBase = testEmbFileBase = "cetuc.pt" # "voxCeleb.pt"
     if "subset" in params:
         affects = params["subset"].split("-")
         affects[0] += affects[1][0]

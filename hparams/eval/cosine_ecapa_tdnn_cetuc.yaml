@@ -1,0 +1,66 @@
+# ################################
+# Model: Speaker Verification Baseline
+# Authors: Hwidong Na 2020
+#          Mirco Ravanelli 2020
+# ################################
+
+seed: 24
+__set_seed: !apply:speechbrain.utils.seed_everything [!ref <seed>]
+
+# Folders and train_log file
+data_folder: /scratch/yadel/datasets/cetuc
+output_folder: !ref /scratch/yadel/jobs/output/ecapa_tdnn/cetuc/<seed>
+save_folder: !ref <output_folder>/save/
+verification_file: data/cetuc/trials.txt
+
+pretrain_path: !ref <save_folder>/CKPT+2026-07-12+09-16-44+00
+
+# csv files
+train_data: !ref output/prepare/cetuc/train.csv
+enrol_data: !ref output/prepare/cetuc/enrol.csv
+test_data: !ref output/prepare/cetuc/test.csv
+split_ratio: [90, 10]
+skip_prep: True
+
+batch_size: 32
+# score_norm: s-norm  # z-norm t-norm s-norm (uncomment to enable it)
+cohort_size: 20000 # amount of imposter utterances in normalization cohort
+n_train_snts: 400000 # used for normalization stats
+
+# Feature parameters
+n_mels: 80
+# left_frames: 0
+# right_frames: 0
+# deltas: False
+
+# Dataloader options
+train_dataloader_opts:
+    batch_size: !ref <batch_size>
+
+enrol_dataloader_opts:
+    batch_size: !ref <batch_size>
+
+test_dataloader_opts:
+    batch_size: !ref <batch_size>
+
+compute_features: !new:speechbrain.lobes.features.Fbank
+    n_mels: !ref <n_mels>
+
+mean_var_norm: !new:speechbrain.processing.features.InputNormalization
+    norm_type: sentence
+    std_norm: False
+
+embedding_model: !new:speechbrain.lobes.models.ECAPA_TDNN.ECAPA_TDNN
+    input_size: !ref <n_mels>
+    channels: [1024, 1024, 1024, 1024, 3072]
+    kernel_sizes: [5, 3, 3, 3, 1]
+    dilations: [1, 2, 3, 4, 1]
+    attention_channels: 128
+    lin_neurons: 192
+
+pretrainer: !new:speechbrain.utils.parameter_transfer.Pretrainer
+    collect_in: !ref <save_folder>
+    loadables:
+        embedding_model: !ref <embedding_model>
+    paths:
+        embedding_model: !ref <pretrain_path>/embedding_model.ckpt

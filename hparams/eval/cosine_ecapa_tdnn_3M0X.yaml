@@ -4,21 +4,22 @@
 #          Mirco Ravanelli 2020
 # ################################
 
-language: en
+language: pt
 subset: Neutral-All
 seed: 24
 __set_seed: !apply:speechbrain.utils.seed_everything [!ref <seed>]
 
 # Folders and train_log file
 data_folder: !ref /scratch/yadel/datasets/3M0X/<language>
-output_folder: !ref /scratch/yadel/jobs/output/ecapa_tdnn/voxCeleb/<seed>
+output_folder: !ref /scratch/yadel/jobs/output/ecapa_tdnn/cetuc/<seed>
 save_folder: !ref <output_folder>/save
 verification_file: !ref data/3M0X/<language>/protocol/<subset>.txt
 
-pretrain_path: !ref <save_folder>/CKPT+2026-07-09+04-40-21+00
+# pretrain_path: !ref <save_folder>/CKPT+2026-07-09+04-40-21+00 # vox
+pretrain_path: !ref <save_folder>/CKPT+2026-07-12+09-16-44+00 # cetuc
 
 # csv files
-train_data: !ref output/prepare/voxCeleb/train.csv
+train_data: !ref output/prepare/cetuc/train.csv
 enrol_data: !ref output/prepare/3M0X/<language>/<subset>/enrol.csv
 test_data: !ref output/prepare/3M0X/<language>/<subset>/test.csv
 split_ratio: [90, 10]
